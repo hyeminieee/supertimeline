@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Supertimeline</title>
+<meta name="description" content="디지털포렌식 논문을 타임라인으로 읽는 개인 피드">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<script>
+  // 테마는 그리기 전에 정한다. 고른 적이 없으면 기기 설정을 따른다.
+  (function () {
+    var t = null;
+    try { t = localStorage.getItem('supertimeline.theme'); } catch (e) {}
+    if (t !== 'black' && t !== 'white') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'black' : 'white';
+    document.documentElement.dataset.theme = t;
+  })();
+</script>
+</head>
+<body data-view="home">
+
+<div class="shell">
+
+  <nav class="side" aria-label="주 메뉴">
+    <a class="brand" href="#" id="brand" aria-label="Supertimeline 홈">
+      <svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3v18"/><path d="M6 7h7"/><path d="M6 12h12"/><path d="M6 17h5"/></svg>
+      <span>Supertimeline</span>
+    </a>
+
+    <div class="nav" id="nav"></div>
+
+    <div class="side-topics">
+      <h2 class="label">주제</h2>
+      <div class="topics" id="topics"></div>
+    </div>
+
+    <p class="side-foot" id="sideFoot"></p>
+  </nav>
+
+  <main class="feed-col" id="main">
+    <header class="feed-head">
+      <div class="head-row">
+        <button class="icon-btn" id="back" type="button" aria-label="홈으로 돌아가기" title="홈으로" hidden>
+          <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+        </button>
+        <h1 id="viewTitle">홈</h1>
+        <button class="icon-btn" id="theme" type="button" aria-label="테마 바꾸기">
+          <svg class="ic ic-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          <svg class="ic ic-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        </button>
+        <button class="icon-btn" id="refresh" type="button" aria-label="새로고침" title="새 논문 받아오기">
+          <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+        </button>
+      </div>
+      <div class="tabs" id="tabs" role="tablist" aria-label="피드 종류"></div>
+      <div class="topic-strip" id="topicStrip" aria-label="주제"></div>
+    </header>
+
+    <div class="profile" id="profile" hidden></div>
+    <div class="notice" id="notice" aria-live="polite"></div>
+    <div class="feed" id="feed"></div>
+    <div class="sentinel" id="sentinel"></div>
+  </main>
+
+  <aside class="rail" aria-label="지분과 데이터">
+    <h1 class="rail-title">지분과 데이터</h1>
+
+    <label class="search">
+      <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="q" type="search" placeholder="검색" autocomplete="off" aria-label="논문 검색">
+    </label>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>요즘 많이 나오는 주제어</h2>
+        <span class="count">최근 90일</span>
+      </div>
+      <div class="trends" id="trends"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>수집 타임라인</h2>
+        <span class="legend"><i class="sw sw-mine"></i>내 분야<i class="sw sw-rest"></i>그 외</span>
+      </div>
+      <div id="chart" class="chart"></div>
+      <p class="hint" id="chartHint"></p>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>피드 지분</h2>
+        <button class="text-btn" id="resetWeights" type="button">기본값</button>
+      </div>
+      <div class="shares" id="shares"></div>
+      <p class="hint">숫자가 클수록 추천 탭에 자주 나옵니다. 좋아요를 누른 주제는 지분이 조금 올라갑니다</p>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>데이터</h2></div>
+      <p class="data-status" id="dataStatus"></p>
+
+      <form class="row-form" id="addForm">
+        <label class="field">
+          <span>DOI로 논문 추가</span>
+          <input id="doi" type="text" placeholder="10.3390/digital6040094" autocomplete="off" spellcheck="false">
+        </label>
+        <button class="btn" type="submit">추가</button>
+      </form>
+
+      <details class="more">
+        <summary>키와 백업</summary>
+        <label class="field">
+          <span>OpenAlex 키 (선택)</span>
+          <input id="apiKey" type="text" placeholder="비워 두면 무료 공용 한도로 조회" autocomplete="off" spellcheck="false">
+        </label>
+        <div class="btn-row">
+          <button class="btn" id="exportBtn" type="button">좋아요·의견 내보내기</button>
+          <label class="btn file-btn">가져오기<input id="importFile" type="file" accept="application/json"></label>
+        </div>
+      </details>
+    </section>
+  </aside>
+
+</div>
+
+<nav class="tabbar" id="tabbar" aria-label="주 메뉴"></nav>
+
+<script src="rules.js"></script>
+<script src="seed.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
