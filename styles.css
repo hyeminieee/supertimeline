@@ -236,10 +236,9 @@ a.title:hover { text-decoration: underline; text-decoration-thickness: 1px; text
 .evidence a.src { color: var(--text2); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; border-bottom: 1px solid var(--line-strong); transition: color 150ms var(--ease), border-color 150ms var(--ease); }
 .evidence a.src:hover { color: var(--text); border-color: var(--text2); }
 
-.actions { display: grid; grid-template-columns: repeat(4, 1fr); margin: 8px 0 0 -8px; }
+.actions { display: flex; justify-content: space-between; max-width: 480px; margin: 8px 0 0 -8px; }
 .act {
-  justify-self: start;
-  display: inline-flex; align-items: center; gap: 8px;
+  display: inline-flex; align-items: center; gap: 8px; flex: none; white-space: nowrap;
   height: 36px; padding: 0 8px; border-radius: 8px;
   font: 400 12px/1 var(--mono); color: var(--muted); font-variant-numeric: tabular-nums;
   transition: background-color 150ms var(--ease), color 150ms var(--ease), transform 150ms var(--ease);
@@ -375,6 +374,8 @@ button.act:active { transform: scale(0.97); }
 }
 
 @media (max-width: 640px) {
+  .actions { margin-left: -4px; }
+  .act { gap: 4px; padding: 0 4px; }
   .feed-col { border-left: 0; border-right: 0; }
   .post { padding: 16px 16px 8px; }
   .head-row { padding-left: 16px; }

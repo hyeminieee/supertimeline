@@ -5,6 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Supertimeline</title>
 <meta name="description" content="디지털포렌식 논문을 타임라인으로 읽는 개인 피드">
+<!-- 개인용 사이트라 검색엔진에 올라가지 않게 한다 -->
+<meta name="robots" content="noindex, nofollow">
+<!-- 휴대폰 홈 화면에 추가하면 주소창 없이 앱처럼 열린다 -->
+<meta name="theme-color" content="#ffffff" id="themeColor">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Supertimeline">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -16,6 +27,7 @@
     try { t = localStorage.getItem('supertimeline.theme'); } catch (e) {}
     if (t !== 'black' && t !== 'white') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'black' : 'white';
     document.documentElement.dataset.theme = t;
+    document.getElementById('themeColor').content = t === 'black' ? '#000000' : '#ffffff';
   })();
 </script>
 </head>

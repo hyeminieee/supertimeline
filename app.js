@@ -880,7 +880,11 @@
   $('brand').addEventListener('click', e => { e.preventDefault(); go('home'); });
   $('back').addEventListener('click', () => go('home'));
   $('refresh').addEventListener('click', () => refresh(true));
-  const paintTheme = () => { const black = document.documentElement.dataset.theme === 'black'; $('theme').title = black ? '화이트 테마로' : '블랙 테마로'; };
+  const paintTheme = () => {
+    const black = document.documentElement.dataset.theme === 'black';
+    $('theme').title = black ? '화이트 테마로' : '블랙 테마로';
+    $('themeColor').content = black ? '#000000' : '#ffffff';
+  };
   $('theme').addEventListener('click', () => {
     const next = document.documentElement.dataset.theme === 'black' ? 'white' : 'black';
     document.documentElement.dataset.theme = next;
