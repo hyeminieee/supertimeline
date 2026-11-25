@@ -1,5 +1,7 @@
 # Supertimeline
 
+**사이트 바로 가기: https://hyeminieee.github.io/supertimeline/**
+
 디지털포렌식 논문을 타임라인처럼 넘겨 보는 개인 피드입니다. 빌드 과정 없이 `index.html`을 열면 동작합니다.
 
 ## 데이터와 저작권
